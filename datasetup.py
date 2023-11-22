@@ -1,12 +1,12 @@
 import sys, os
 
-data_dir = "dl_finalpro\\data\\archive\\retinopathy_dataset"
-list_dir = "dl_finalpro\\data\\archive"
+data_dir = "data\\archive\\images_combines"
+list_dir = "data\\archive"
 
 
-train_size = int(0.8 * 3662)
-test_size = int(0.6 * (3662 - train_size))
-val_size = 3662 - test_size - train_size
+train_size = int(0.8 * 3662)                    # 3662
+test_size = int(0.6 * (3662 - train_size))      # 429
+val_size = 3662 - test_size - train_size        # 294
 
 # returns file list and label list 
 def get_lists(split):

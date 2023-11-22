@@ -22,19 +22,19 @@ class CNN(nn.Module):
         self.drop = nn.Dropout2d(p=0.2)
         
 #       layer 3: fully connected layer, input features = 320, output features = 50        
-        self.fully_cl_1 = nn.Linear(53*53*20, 50)
+        self.fully_cl_1 = nn.Linear(53*53*20, 100)
         
 #       layer 4: fully connected layer, input features = output feature of layer 3, output feature = num_of_classes        
-        self.fully_cl_2 = nn.Linear(50, 5)
+        self.fully_cl_2 = nn.Linear(100, 5)
         
 #   to send data forward
     def forward(self, x):
         x = self.layer1(x)
         x = self.layer2(x)
         x = F.dropout(self.drop(x), training=self.training)
-        x = x.view(-1,53*53*20)
+        x = x.view(-1, 53*53*20)
         x = self.fully_cl_1(x)
         x = F.relu(x)
         x = self.fully_cl_2(x)
-        output = F.sigmoid(x)
+        output = F.log_softmax(x, dim= 1)
         return output 
