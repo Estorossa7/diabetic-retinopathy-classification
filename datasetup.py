@@ -1,4 +1,10 @@
-import sys, os
+import os
+import torch
+import numpy as np
+from sklearn.utils import class_weight
+
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda" if use_cuda else "cpu")
 
 data_dir = "data\\archive\\images_combines"
 list_dir = "data\\archive"
@@ -21,8 +27,15 @@ def get_lists(split):
             line = line.split(',')
             file = os.path.join(data_dir, line[0])
             filelist.append(file + ".png")
-            labellist.append(line[1])
+            labellist.append(int(line[1]))
 
     return filelist, labellist
+
+def get_class_weight(split):
+
+    labels= get_lists(split)[1]
+    class_weights = class_weight.compute_class_weight(class_weight='balanced',classes=np.array([0,1,2,3,4]),y= labels )
+    class_weights = torch.tensor(class_weights,dtype=torch.float).to(device)
+    return class_weights
 
 print("The End - datasetup")

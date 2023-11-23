@@ -1,4 +1,4 @@
-from datasetup import get_lists
+from datasetup import get_lists, get_class_weight
 from models import CNN
 from hyparams import hyparams
 
@@ -40,15 +40,20 @@ class DataSet(object):
             #img = np.array(img)
             img = TF.to_tensor(img)
 
-            raw_label = int( self.labels[idx])
-            label[raw_label] = 1.0
+            #   one hot encoding of labels
+            #raw_label = self.labels[idx]
+            #label[raw_label] = 1.0
+
+            #   1d label array
+            label = self.labels[idx]
 
             return img, label
         
 
 
-# loss function cross entropy loss
-loss_func = nn.CrossEntropyLoss()
+#   loss function cross entropy loss
+class_weights = get_class_weight('train')
+loss_func = nn.CrossEntropyLoss(weight= class_weights)
 
 def train(device, model, train_data_loader, val_data_loader, optimizer, total_epoch=hyparams.total_epoch):
 
@@ -59,26 +64,29 @@ def train(device, model, train_data_loader, val_data_loader, optimizer, total_ep
     print('Total Eval Steps: {}'.format(len(val_data_loader)))
 
     while current_epoch < total_epoch:
-        model.train()    
+        
+        model.train()
+
         current_epoch_loss = 0
 
         prog_bar = tqdm(enumerate(train_data_loader))
 
         for step, (img, label) in prog_bar:
             
-            optimizer.zero_grad()
+            with torch.set_grad_enabled(True):
+                optimizer.zero_grad()
 
-            # Move data to CUDA device
-            img = img.to(device)
-            label = label.to(device)
+                # Move data to CUDA device
+                img = img.to(device)
+                label = label.to(device)
 
-            pred = model(img)
+                pred = model(img)
 
-            loss = loss_func(pred, label)
-            loss.backward()
-            optimizer.step()
+                loss = loss_func(pred, label)
+                loss.backward()
+                optimizer.step()
 
-            current_epoch_loss += loss.item()
+            current_epoch_loss += loss.item() 
 
             prog_bar.set_description('Train: Epoch: {}, Step: {}, Avg Loss: {:.6f}'.format(current_epoch, step, current_epoch_loss/( step+ 1)))
 
@@ -86,8 +94,8 @@ def train(device, model, train_data_loader, val_data_loader, optimizer, total_ep
         avg_loss = current_epoch_loss/( step+ 1)
         train_loss_list.append(avg_loss)
 
-        with torch.no_grad():
-            eval_loss = eval(device, model, val_data_loader)
+        
+        eval_loss = eval(device, model, val_data_loader)
         eval_loss_list.append(eval_loss)
 
     return train_loss_list, current_epoch, eval_loss_list
@@ -97,26 +105,26 @@ def eval(device, model, val_data_loader):
 
     while 1:
         current_loss= 0
-        count = 0
         model.eval()
 
         prog_bar = tqdm(enumerate(val_data_loader))
 
         for step, (img, label) in prog_bar:
-            count += len(img)
-            # Move data to CUDA device
-            img = img.to(device)
-            label = label.to(device)
 
-            pred = model(img)
+            with torch.no_grad():
+                # Move data to CUDA device
+                img = img.to(device)
+                label = label.to(device)
 
-            loss = loss_func(pred, label)
+                pred = model(img)
 
-            current_loss += loss.item()
+                loss = loss_func(pred, label)
+
+            current_loss += loss.item() 
 
             prog_bar.set_description('Eval: Step: {}, Avg Loss: {:.6f}'.format(step, current_loss/( step+ 1)))
 
-        avg_loss = current_loss/( count)
+        avg_loss = current_loss/( step+ 1)
         
         return avg_loss
     

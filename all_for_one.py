@@ -37,7 +37,6 @@ def training_setup():
 
 
 """
-    need to add eval() to train.py
     need to create test.py similat to train,py
     create testing_setup() in all_for_one.py
 
@@ -57,8 +56,8 @@ def plot(t_list, v_list, epoch, plt_name):
     x = [i for i in range(epoch)]
 
     plt.subplot(1,1,1)
-    plt.plot(x, t_list, 'r')
-    plt.plot(x, v_list, 'b')
+    plt.plot( t_list, label='training loss')
+    plt.plot( v_list, label='validation loss')
     plt.title(plt_name)
     plt.xlabel('epochs')
     plt.ylabel(plt_name.split(' ')[-1])

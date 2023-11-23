@@ -9,13 +9,13 @@ class CNN(nn.Module):
 #       layer 1: input channel = 1, output channel = 10, kernel size = 5x5, maxpool size = 2x2
         self.layer1 = nn.Sequential(nn.Conv2d(3,10,kernel_size=5), 
                                    nn.ReLU(),
-                                   nn.MaxPool2d(kernel_size=2),
+                                   nn.MaxPool2d(kernel_size=2, stride=2),
                                    nn.BatchNorm2d(10))
         
 #       layer 2: input channel = ouput channel of layer 1, output channel = 20, kernel size = 5x5, maxpool size = 2x2
         self.layer2 = nn.Sequential(nn.Conv2d(10,20,kernel_size=5),
                                    nn.ReLU(),
-                                   nn.MaxPool2d(kernel_size=2),
+                                   nn.MaxPool2d(kernel_size=2, stride=2),
                                    nn.BatchNorm2d(20))
 
 #       A drop layer deletes 20% of the features to help prevent overfitting 
@@ -36,5 +36,5 @@ class CNN(nn.Module):
         x = self.fully_cl_1(x)
         x = F.relu(x)
         x = self.fully_cl_2(x)
-        output = F.log_softmax(x, dim= 1)
+        output = F.softmax(x, dim= 1)
         return output 
