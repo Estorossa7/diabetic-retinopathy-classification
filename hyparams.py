@@ -24,14 +24,14 @@ hyparams = HyParams(
 	
     img_size= 224,       	# input image size
 	
-	batch_size= 21,     	# batch size
+	batch_size= 29,     	# batch size
 	eval_batch_size= 21,		# eval batch size
 	lr = 1e-4,          	# learning rate
-    total_epoch = 10,   	# total number of epochs
+    total_epoch = 30,   	# total number of epochs
 	
     checkpoint_interval= 3000,   # no of steps before saving checkpoint
 	eval_interval= 500,         # no of steps before eval step
     
-	seed = 12				# seed for random.
+	seed = 1				# seed for random.
 )
 	

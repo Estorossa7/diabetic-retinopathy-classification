@@ -52,8 +52,12 @@ class DataSet(object):
 
 
 #   loss function cross entropy loss
-class_weights = get_class_weight('train')
-loss_func = nn.CrossEntropyLoss(weight= class_weights)
+class_weight_train = get_class_weight('train')
+class_weight_val = get_class_weight('val')
+
+loss_func_train = nn.CrossEntropyLoss(weight= class_weight_train)
+loss_func_val = nn.CrossEntropyLoss(weight= class_weight_val)
+
 
 def train(device, model, train_data_loader, val_data_loader, optimizer, total_epoch=hyparams.total_epoch):
 
@@ -82,7 +86,7 @@ def train(device, model, train_data_loader, val_data_loader, optimizer, total_ep
 
                 pred = model(img)
 
-                loss = loss_func(pred, label)
+                loss = loss_func_train(pred, label)
                 loss.backward()
                 optimizer.step()
 
@@ -118,7 +122,7 @@ def eval(device, model, val_data_loader):
 
                 pred = model(img)
 
-                loss = loss_func(pred, label)
+                loss = loss_func_val(pred, label)
 
             current_loss += loss.item() 
 

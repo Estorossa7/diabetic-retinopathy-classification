@@ -10,7 +10,7 @@ data_dir = "data\\archive\\images_combines"
 list_dir = "data\\archive"
 
 
-train_size = int(0.8 * 3662)                    # 3662
+train_size = int(0.8 * 3662)                    # 2929
 test_size = int(0.6 * (3662 - train_size))      # 429
 val_size = 3662 - test_size - train_size        # 294
 

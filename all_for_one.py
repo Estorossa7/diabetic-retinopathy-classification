@@ -29,6 +29,7 @@ def training_setup():
     print('total trainable params {}'.format(sum(p.numel() for p in model.parameters() if p.requires_grad)))
 
     optimizer = optim.Adam([p for p in model.parameters() if p.requires_grad], lr=hyparams.lr)
+    #optimizer = optim.SGD([p for p in model.parameters() if p.requires_grad], lr=hyparams.lr)
 
     train_loss_list, current_epoch, eval_loss_list = train(device, model, train_data_loader, val_data_loader, optimizer, total_epoch=hyparams.total_epoch)
 
@@ -53,7 +54,7 @@ def training_setup():
 """
 
 def plot(t_list, v_list, epoch, plt_name):
-    x = [i for i in range(epoch)]
+    x = [i for i in range(1,epoch)]
 
     plt.subplot(1,1,1)
     plt.plot( t_list, label='training loss')
