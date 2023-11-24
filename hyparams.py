@@ -27,7 +27,8 @@ hyparams = HyParams(
 	batch_size= 29,     	# batch size
 	eval_batch_size= 21,		# eval batch size
 	lr = 1e-4,          	# learning rate
-    total_epoch = 30,   	# total number of epochs
+	weight_decay = 1e-2,		# weighted decay for optimizer
+    total_epoch = 5,   	# total number of epochs
 	
     checkpoint_interval= 3000,   # no of steps before saving checkpoint
 	eval_interval= 500,         # no of steps before eval step

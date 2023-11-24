@@ -11,7 +11,7 @@ list_dir = "data\\archive"
 
 
 train_size = int(0.8 * 3662)                    # 2929
-test_size = int(0.6 * (3662 - train_size))      # 429
+test_size = int(0.6 * (3662 - train_size))      # 439
 val_size = 3662 - test_size - train_size        # 294
 
 # returns file list and label list 
